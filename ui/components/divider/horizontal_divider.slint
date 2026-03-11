@@ -1,14 +1,8 @@
-export component HorizontalDivider {
-    in property <brush> color: #ccc;
+export component HorizontalDivider inherits Rectangle {
     in property <length> thickness: 1px;
-    in property <length> width_size: 100px;
 
-    width: root.width_size;
+    background: #ccc;
     height: root.thickness;
-
-    Rectangle {
-        width: parent.width;
-        height: parent.height;
-        background: root.color;
-    }
+    border-width: root.thickness;
+    border-color: self.background;
 }

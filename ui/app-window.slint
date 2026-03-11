@@ -33,7 +33,7 @@ import {
     in-out property <int> active-page;
 
     width: 250px;
-    // height: 100%;
+    min-height: 700px;
     background: Theme.bg_sidebar;
 
     VerticalBox {
@@ -88,8 +88,8 @@ import {
         }
 
         HorizontalDivider {
-            width_size: parent.width;
-            color: Theme.border_primary;
+            width: parent.width;
+            background: Theme.border_primary;
         }
 
         //=============================
@@ -116,8 +116,8 @@ import {
         }
 
         HorizontalDivider {
-            width_size: parent.width;
-            color: Theme.border_primary;
+            width: parent.width;
+            background: Theme.border_primary;
         }
 
         //=============================
@@ -166,9 +166,11 @@ import {
 // Tab Body Header
 //======================================
 component BodyHeader inherits Rectangle {
-    in property <string> title;
     callback start_drag();
 
+    in property <string> title;
+
+    vertical-stretch: 0;
     height: Theme.topbar_height;
     background: Theme.bg_secondary;
 
@@ -234,12 +236,9 @@ component BodyHeader inherits Rectangle {
 // 
 //======================================
 export component AppWindow inherits Window {
-    property <length> drag-start-x;
-    property <length> drag-start-y;
+    callback start_system_move();
 
     in-out property <int> active-page: 0;
-
-    callback start_system_move();
 
     no-frame: true;
     preferred-width: 1000px;
@@ -268,9 +267,9 @@ export component AppWindow inherits Window {
             //================================
             // Body
             //================================
-            VerticalBox {
-                spacing: 0px;
-                padding: 0px;
+            VerticalLayout {
+                alignment: start;
+                vertical-stretch: 1;
 
                 BodyHeader {
                     start_drag => root.start_system_move();
@@ -278,15 +277,11 @@ export component AppWindow inherits Window {
                 }
 
                 // Where the body (pages) will be rendered
-                Rectangle {
-                    vertical-stretch: 1;
-
-                    if root.active-page == 0: DashboardPage { }
-                    if root.active-page == 1: ScanAndCleanPage { }
-                    if root.active-page == 2: CleanersPage { }
-                    if root.active-page == 3: ActivityLogPage { }
-                    if root.active-page == 4: SettingsPage { }
-                }
+                if root.active-page == 0: DashboardPage {}
+                if root.active-page == 1: ScanAndCleanPage { }
+                if root.active-page == 2: CleanersPage { }
+                if root.active-page == 3: ActivityLogPage { }
+                if root.active-page == 4: SettingsPage { }
             }
         }
     }

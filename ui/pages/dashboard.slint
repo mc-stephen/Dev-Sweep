@@ -1,3 +1,57 @@
-export component DashboardPage {
-    
+import { Card } from "../components/card.slint";
+import { Icons } from "../services/icons.slint";
+import { StatCard } from "../components/stat_card.slint";
+import { HorizontalBox, ScrollView } from "std-widgets.slint";
+
+export component DashboardPage inherits Flickable {
+    min-width: layout.min-width + 40px;
+
+    VerticalLayout {
+        padding: 20px;
+        spacing: 15px;
+
+        layout := HorizontalLayout {
+            spacing: 15px;
+
+            StatCard { }
+
+            StatCard { }
+
+            StatCard { }
+
+            StatCard { }
+        }
+
+        HorizontalLayout {
+            spacing: 15px;
+
+            Card {
+                source: Icons.bolt;
+                title: "Quick Actions";
+
+                VerticalLayout {
+                    spacing: 0px;
+                    padding: 15px;
+                }
+            }
+
+            Card {
+                source: Icons.moon;
+                title: "Recent Activity";
+
+                Rectangle {
+                    min-height: 200px;
+                }
+            }
+        }
+
+        Card {
+            source: Icons.notification;
+            title: "Available Cleaners";
+
+            Rectangle {
+                min-height: 200px;
+            }
+        }
+    }
 }

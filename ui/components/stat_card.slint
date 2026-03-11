@@ -1,0 +1,81 @@
+
+import { Theme } from "../theme/theme.slint";
+import { Icons } from "../services/icons.slint";
+export component StatCard inherits Rectangle {
+
+    // width: 300px;
+    border-width: 1px;
+    background: Theme.bg_card;
+    border-radius: Theme.radius_lg;
+    border-color: ta.has-hover ? Theme.accent : Theme.border_primary;
+
+    ta := TouchArea { }
+
+    HorizontalLayout {
+        spacing: 13px;
+        padding: 15px;
+
+        Rectangle {
+            width: 40px;
+            height: self.width;
+            border-radius: Theme.radius_md;
+            background: Theme.accent.with-alpha(0.12);
+
+            Image {
+                source: Icons.search;
+                colorize: Theme.accent;
+                width: parent.width - 25px;
+            }
+        }
+
+        VerticalLayout {
+            spacing: 2px;
+            alignment: center;
+            horizontal-stretch: 1;
+
+            Text {
+                text: "0";
+                font-weight: 800;
+                font-size: 1.65rem;
+                letter-spacing: -1px;
+                color: Theme.text_primary;
+            }
+
+            Text {
+                font-weight: 500;
+                font-size: 0.8rem;
+                text: "Projects Found";
+                color: Theme.text_secondary;
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Rectangle {
+                background: Theme.success_bg;
+                border-radius: self.height * Theme.radius_full;
+
+                HorizontalLayout {
+                    padding-top: 4px;
+                    padding-left: 7px;
+                    padding-right: 7px;
+                    padding-bottom: 4px;
+
+                    Image {
+                        width: 10px;
+                        source: Icons.bolt;
+                        colorize: Theme.success;
+                    }
+
+                    Text {
+                        text: "Last Scan";
+                        font-size: 0.72rem;
+                        color: Theme.success;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+}

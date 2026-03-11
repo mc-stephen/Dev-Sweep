@@ -1,10 +1,81 @@
 
-export component Card {
-    width: 100px;
-    height: 50px;
+import { Theme } from "../theme/theme.slint";
+import { HorizontalDivider } from "divider/horizontal_divider.slint";
+
+component CardHeader inherits HorizontalLayout {
+    in property <string> title;
+    in property <image> source;
+
+    spacing: 3px;
+    padding: 15px;
+    vertical-stretch: 0;
+
+    Image {
+        width: 18px;
+        source: source;
+        height: self.width;
+        colorize: Theme.accent;
+    }
+
+    Text {
+        text: title;
+        font-size: 1rem;
+        font-weight: 600;
+        horizontal-stretch: 1;
+        color: Theme.text_primary;
+        vertical-alignment: center;
+    }
 
     Rectangle {
-        background: blue;
-        border-radius: 5px;
+        ta := TouchArea {
+            mouse-cursor: pointer;
+        }
+
+        HorizontalLayout {
+            spacing: 6px;
+
+            Text {
+                text: "View All";
+                font-size: 0.82rem;
+                vertical-alignment: center;
+                color: ta.has-hover ? Theme.accent : Theme.accent_light;
+            }
+
+            VerticalLayout {
+                y: -1.5px;
+                alignment: center;
+                Image {
+                    width: 10px;
+                    source: source;
+                    colorize: ta.has-hover ? Theme.accent : Theme.accent_light;
+                }
+            }
+        }
+    }
+}
+
+export component Card inherits Rectangle {
+    in property <string> title;
+    in property <image> source;
+
+    clip: true;
+    border-width: 1px;
+    horizontal-stretch: 1;
+    background: Theme.bg_card;
+    border-radius: Theme.radius_lg;
+    border-color: Theme.border_primary;
+
+    VerticalLayout {
+
+        CardHeader {
+            title: title;
+            source: source;
+        }
+
+        HorizontalDivider {
+            background: Theme.border_primary;
+        }
+
+        @children
     }
 }
