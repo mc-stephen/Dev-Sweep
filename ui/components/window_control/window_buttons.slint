@@ -1,0 +1,57 @@
+import { Theme } from "../../theme/theme.slint";
+import { VerticalDivider } from "../divider/vertical_divider.slint";
+import { WindowControl } from "./global_logic/window_control_logic.slint";
+
+component SingleWindowButton inherits Rectangle {
+    callback onClicked();
+
+    in property <brush> colorize;
+    in property <brush> hover_colorize;
+    in property <color> hover_bg_color;
+
+    ta := TouchArea {
+        clicked => onClicked();
+        // mouse-cursor: MouseCursor.pointer;
+    }
+
+    height: 100%;
+    width: self.height;
+    background: ta.has-hover ? root.hover_bg_color : transparent;
+
+    Image {
+        width: 10px;
+        height: 10px;
+        source: @image-url("");
+        colorize: ta.has-hover ? root.hover_colorize : root.colorize;
+    }
+}
+
+export component WindowButtons inherits Rectangle {
+    clip: true;
+    background: Theme.bg_card;
+    border-top-right-radius: 10px;
+
+    HorizontalLayout {
+        SingleWindowButton {
+            onClicked => WindowControl.minimize-requested();
+        }
+
+        VerticalDivider {
+            height_size: parent.height;
+        }
+
+        SingleWindowButton {
+            onClicked => WindowControl.maximize-requested();
+        }
+
+        VerticalDivider {
+            height_size: parent.height;
+        }
+
+        SingleWindowButton {
+            hover_bg_color: Colors.red;
+            hover_colorize: Colors.white;
+            onClicked => WindowControl.close-requested();
+        }
+    }
+}

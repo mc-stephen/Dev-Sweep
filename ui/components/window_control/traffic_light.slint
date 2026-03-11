@@ -1,0 +1,67 @@
+ import { WindowControl } from "./global_logic/window_control_logic.slint";
+
+ component TrafficLightButton inherits Rectangle {
+    in property <string> icon;
+    in property <color> base-color;
+
+    callback clicked();
+
+    width: 14px;
+    height: 14px;
+    border-radius: self.width / 2;
+
+    ta := TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+
+    background: ta.has-hover ? root.base-color.darker(10%) : root.base-color;
+
+    border-width: 1px;
+    border-color: root.base-color.darker(30%);
+
+    animate background { duration: 120ms; }
+
+    Text {
+        visible: ta.has-hover;
+        text: root.icon;
+
+        width: parent.width;
+        height: parent.height;
+
+        font-size: 9px;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+
+        color: black;
+    }
+}
+
+export component TrafficLight inherits VerticalLayout {
+    alignment: center;
+
+    HorizontalLayout {
+        height: 14px;
+        spacing: 5px;
+        padding: 0px;
+
+        TrafficLightButton {
+            icon: "×";
+            base-color: #ff5f57;
+            clicked => WindowControl.close-requested();
+        }
+
+        TrafficLightButton {
+            icon: "–";
+            base-color: #ffbd2e;
+            clicked => WindowControl.minimize-requested();
+        }
+
+        TrafficLightButton {
+            icon: "+";
+            base-color: #28c840;
+            clicked => WindowControl.maximize-requested();
+        }
+    }
+}

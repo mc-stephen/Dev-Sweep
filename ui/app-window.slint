@@ -1,0 +1,293 @@
+import { Theme } from "./theme/theme.slint";
+import { Icons } from "./services/icons.slint";
+import { NavItem } from "components/nav_item.slint";
+import { CleanersPage } from "pages/cleaners.slint";
+import { SettingsPage } from "pages/settings.slint";
+import { DashboardPage } from "pages/dashboard.slint";
+import { TextField } from "components/text_field.slint";
+import { ActivityLogPage } from "pages/activity_log.slint";
+import { ScanAndCleanPage } from "pages/scan_and_clean.slint";
+import { IconButton } from "components/buttons/icon_button.slint";
+import { TrafficLight } from "components/window_control/traffic_light.slint";
+import { WindowButtons } from "components/window_control/window_buttons.slint";
+import { HorizontalDivider } from "components/divider/horizontal_divider.slint";
+import {
+    WindowControl,
+} from "./components/window_control/global_logic/window_control_logic.slint";
+export { WindowControl } 
+import {
+    Button,
+    VerticalBox,
+    HorizontalBox,
+    GridBox,
+    LineEdit,
+    Switch,
+} from "std-widgets.slint";
+
+//======================================
+// Tab
+//======================================
+ component Tab inherits Rectangle {
+
+    callback on_route(int);
+    in-out property <int> active-page;
+
+    width: 250px;
+    // height: 100%;
+    background: Theme.bg_sidebar;
+
+    VerticalBox {
+        spacing: 0px;
+        padding: 0px;
+            
+        //=============================
+        // Header Section
+        //=============================
+        HorizontalBox {
+            padding: 10px;
+            spacing: 10px;
+
+            // Display on when it is MacOS
+            if Platform.os == OperatingSystemType.macos: TrafficLight { }
+
+            Rectangle {
+                width: 31px;
+                height: self.width;
+                background: Theme.accent;
+                border-radius: Theme.radius_md;
+
+                Image {
+                    width: 13px;
+                    height: self.width;
+                    colorize: #ffffff;
+                    source: Icons.appIcon;
+                }
+            }
+
+            VerticalBox {
+                padding: 0px;
+                spacing: 3px;
+                alignment: center;
+
+                Text {
+                    text: "DevSweep";
+                    font-weight: 800;
+                    font-size: 1.25rem;
+                    color: Theme.accent;
+                    letter-spacing: -0.5px;
+                }
+
+                Text {
+                    text: "v1.0.0";
+                    font-weight: 500;
+                    font-size: 0.7rem;
+                    color: Theme.text_tertiary;
+                    font-family: Theme.font_mono;
+                }
+            }
+        }
+
+        HorizontalDivider {
+            width_size: parent.width;
+            color: Theme.border_primary;
+        }
+
+        //=============================
+        // Body Section
+        //=============================
+        VerticalBox {
+            spacing: 1px;
+            alignment: start;
+            vertical-stretch: 1;
+
+            for item[index] in [
+                { text: "Dashboard", icon: Icons.dashboard },
+                { text: "Scan & Clean", icon: Icons.search },
+                { text: "Cleaners", icon: Icons.puzzle },
+                { text: "Activity Log", icon: Icons.terminal },
+                { text: "Settings", icon: Icons.settings }
+            ]: NavItem {
+                height: 37px;
+                text: item.text;
+                icon: item.icon;
+                clicked => on_route(index);
+                active: root.active-page == index;
+            }
+        }
+
+        HorizontalDivider {
+            width_size: parent.width;
+            color: Theme.border_primary;
+        }
+
+        //=============================
+        // Footer Section
+        //=============================
+        VerticalBox {
+            spacing: 0px;
+            padding: 10px;
+
+            HorizontalBox {
+                spacing: 5px;
+                padding-top: 0px;
+                alignment: center;
+                padding-bottom: 10px;
+
+                Image {
+                    width: 15px;
+                    height: self.width;
+                    source: Icons.moon;
+                    colorize: Theme.text_tertiary;
+                }
+
+                Switch {
+                    checked: true;
+                }
+
+                Image {
+                    width: 15px;
+                    source: Icons.sun;
+                    height: self.width;
+                    colorize: Theme.text_tertiary;
+                }
+            }
+
+            Text {
+                font-size: 0.72rem;
+                color: Theme.text_tertiary;
+                text: "Cross-platform ~ Open Source";
+                horizontal-alignment: TextHorizontalAlignment.center;
+            }
+        }
+    }
+}
+
+//======================================
+// Tab Body Header
+//======================================
+component BodyHeader inherits Rectangle {
+    in property <string> title;
+    callback start_drag();
+
+    height: Theme.topbar_height;
+    background: Theme.bg_secondary;
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+        double-clicked => WindowControl.maximize-requested();
+        pointer-event(event) => {
+            if (event.button == PointerEventButton.left && event.kind == PointerEventKind.down) {
+                root.start_drag();
+            }
+        }
+    }
+
+    HorizontalLayout {
+
+        VerticalLayout {
+            alignment: center;
+            padding-left: 10px;
+
+            Text {
+                text: title;
+                font-weight: 700;
+                font-size: 1.2rem;
+                horizontal-stretch: 1;
+                vertical-alignment: center;
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            HorizontalLayout {
+                spacing: 5px;
+                padding-right: 10px;
+                horizontal-stretch: 0;
+
+                HorizontalLayout {
+                    padding-right: 5px;
+                    TextField {
+                        placeholder: "Search projects...";
+                    }
+                }
+
+                IconButton {
+                    icon_size: 15px;
+                    icon: Icons.notification;
+                }
+
+                IconButton {
+                    icon: Icons.bolt;
+                }
+            }
+        }
+
+        // Display on when it is Window or Linux
+        if Platform.os == OperatingSystemType.windows || Platform.os == OperatingSystemType.linux: 
+        WindowButtons { }
+    }
+}
+
+//======================================
+// 
+//======================================
+export component AppWindow inherits Window {
+    property <length> drag-start-x;
+    property <length> drag-start-y;
+
+    in-out property <int> active-page: 0;
+
+    callback start_system_move();
+
+    no-frame: true;
+    preferred-width: 1000px;
+    preferred-height: 600px;
+    background: transparent;
+    // resize-border-width: 6px;
+    
+    Rectangle {
+        clip: true;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        background: Theme.bg_primary;
+
+        HorizontalBox {
+            spacing: 0px;
+            padding: 0px;
+
+            Tab {
+                active-page: root.active-page;
+                on_route(index) => {
+                    root.active-page = index;
+                }
+            }
+
+            //================================
+            // Body
+            //================================
+            VerticalBox {
+                spacing: 0px;
+                padding: 0px;
+
+                BodyHeader {
+                    start_drag => root.start_system_move();
+                    title: root.active-page == 0 ? "Dashboard" : root.active-page == 1 ? "Scan & Clean" : root.active-page == 2 ? "Cleaners" : root.active-page == 3 ? "Activity Log" : "Settings";
+                }
+
+                // Where the body (pages) will be rendered
+                Rectangle {
+                    vertical-stretch: 1;
+
+                    if root.active-page == 0: DashboardPage { }
+                    if root.active-page == 1: ScanAndCleanPage { }
+                    if root.active-page == 2: CleanersPage { }
+                    if root.active-page == 3: ActivityLogPage { }
+                    if root.active-page == 4: SettingsPage { }
+                }
+            }
+        }
+    }
+}

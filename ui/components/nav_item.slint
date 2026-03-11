@@ -1,0 +1,61 @@
+import { Theme } from "../theme/theme.slint";
+import { HorizontalBox } from "std-widgets.slint";
+
+
+export component NavItem inherits Rectangle {
+    in property <image> icon;
+    in property <string> text;
+    in property <bool> active: false;
+
+    callback clicked();
+
+    ta := TouchArea {
+        clicked => root.clicked();
+        mouse-cursor: MouseCursor.pointer;
+    }
+
+    border-radius: 10px;
+    background: root.active ? @linear-gradient(135deg, rgb(108,92,231,0.12), rgb(108,92,231,0.05)) : ta.has-hover ? Theme.bg_tertiary : transparent;
+
+    // left accent bar (CSS ::before equivalent)
+    Rectangle {
+        visible: root.active;
+
+        width: 3px;
+        height: parent.height * 0.55;
+
+        x: 0px;
+        y: (parent.height - self.height) * 0.5;
+
+        background: Theme.accent;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+
+    HorizontalBox {
+        spacing: 10px;
+        padding-top: 0px;
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-bottom: 0px;
+
+        VerticalLayout {
+            alignment: center;
+            
+            Image {
+                width: 14px;
+                height: 14px;
+                source: root.icon;
+                vertical-alignment: center;
+                colorize: root.active ? Theme.accent_light : ta.has-hover ? Theme.text_primary : Theme.text_secondary;
+            }
+        }
+
+        Text {
+            text: root.text;
+            font-size: 14px;
+            vertical-alignment: center;
+            color: root.active ? Theme.accent_light : ta.has-hover ? Theme.text_primary : Theme.text_secondary;
+        }
+    }
+}

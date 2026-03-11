@@ -1,0 +1,48 @@
+import { Theme } from "../theme/theme.slint";
+import { Icons } from "../services/icons.slint";
+
+export component TextField inherits Rectangle {
+    in property <string> placeholder;
+    in-out property <string> text <=> input.text;
+
+    width: 200px;
+    height: 35px;
+    border-width: 1px;
+    background: Theme.bg_input;
+    drop-shadow-color: Theme.accent_glow;
+    drop-shadow-blur: input.has-focus ? 3px : 0px;
+    border-radius: self.height * Theme.radius_full;
+    border-color: input.has-focus ? Theme.accent : Theme.border_primary;
+
+    HorizontalLayout {
+        spacing: 8px;
+        padding-left: 12px;
+        padding-right: 12px;
+
+        Image {
+            width: 12px;
+            source: Icons.search;
+            colorize: Theme.text_tertiary;
+        }
+
+        Rectangle {
+            clip: true;
+
+            input := TextInput {
+                font-size: 12px;
+                single-line: true;
+                color: Theme.text_primary;
+                vertical-alignment: center;
+                accepted => input.clear-focus();
+                
+                // Placeholder Logic
+                if (self.text == ""): Text {
+                    x: 0px;
+                    y: 12.5px;
+                    text: root.placeholder;
+                    color: Theme.text_tertiary;
+                }
+            }
+        }
+    }
+}
