@@ -1,0 +1,42 @@
+import { Icons } from "../../services/icons.slint";
+
+export struct StatData {
+    icon: image,
+    value: string,
+    label: string,
+    trend_icon: image,
+    trend_label: string,
+}
+
+export global DashboardAdapter {
+    in-out property <[StatData]> stats: [
+        {
+            label: "Projects Found",
+            value: "_",
+            icon: Icons.search,
+            trend_icon: Icons.bolt,
+            trend_label: "Last Scan"
+        },
+        {
+            label: "Space Recoverable",
+            value: "_",
+            icon: Icons.search,
+            trend_icon: Icons.bolt,
+            trend_label: "Last Scan"
+        },
+        {
+            label: "Total Cleaned",
+            value: "_",
+            icon: Icons.search,
+            trend_icon: Icons.bolt,
+            trend_label: "Last Scan"
+        },
+        {
+            label: "Active Cleaners",
+            value: "_",
+            icon: Icons.search,
+            trend_icon: Icons.bolt,
+            trend_label: "Last Scan"
+        }
+    ];
+}

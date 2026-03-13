@@ -3,10 +3,10 @@ import { Icons } from "./services/icons.slint";
 import { NavItem } from "components/nav_item.slint";
 import { CleanersPage } from "pages/cleaners.slint";
 import { SettingsPage } from "pages/settings.slint";
-import { DashboardPage } from "pages/dashboard.slint";
 import { TextField } from "components/text_field.slint";
 import { ActivityLogPage } from "pages/activity_log.slint";
 import { ScanAndCleanPage } from "pages/scan_and_clean.slint";
+import { DashboardPage } from "pages/dashboard/dashboard.slint";
 import { IconButton } from "components/buttons/icon_button.slint";
 import { TrafficLight } from "components/window_control/traffic_light.slint";
 import { WindowButtons } from "components/window_control/window_buttons.slint";
@@ -14,6 +14,7 @@ import { HorizontalDivider } from "components/divider/horizontal_divider.slint";
 import {
     WindowControl,
 } from "./components/window_control/global_logic/window_control_logic.slint";
+export { DashboardAdapter } from "./pages/dashboard/data.slint";
 export { WindowControl } 
 import {
     Button,
@@ -277,7 +278,7 @@ export component AppWindow inherits Window {
                 }
 
                 // Where the body (pages) will be rendered
-                if root.active-page == 0: DashboardPage {}
+                if root.active-page == 0: DashboardPage { }
                 if root.active-page == 1: ScanAndCleanPage { }
                 if root.active-page == 2: CleanersPage { }
                 if root.active-page == 3: ActivityLogPage { }

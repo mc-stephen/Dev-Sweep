@@ -1,9 +1,11 @@
 
 import { Theme } from "../theme/theme.slint";
 import { Icons } from "../services/icons.slint";
-export component StatCard inherits Rectangle {
+import { StatData } from "../pages/dashboard/data.slint";
 
-    // width: 300px;
+export component StatCard inherits Rectangle {
+    in property <StatData> data;
+
     border-width: 1px;
     background: Theme.bg_card;
     border-radius: Theme.radius_lg;
@@ -34,7 +36,7 @@ export component StatCard inherits Rectangle {
             horizontal-stretch: 1;
 
             Text {
-                text: "0";
+                text: data.value;
                 font-weight: 800;
                 font-size: 1.65rem;
                 letter-spacing: -1px;
@@ -42,9 +44,9 @@ export component StatCard inherits Rectangle {
             }
 
             Text {
+                text: data.label;
                 font-weight: 500;
                 font-size: 0.8rem;
-                text: "Projects Found";
                 color: Theme.text_secondary;
             }
         }

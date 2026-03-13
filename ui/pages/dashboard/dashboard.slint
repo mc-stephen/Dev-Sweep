@@ -1,25 +1,23 @@
-import { Card } from "../components/card.slint";
-import { Icons } from "../services/icons.slint";
-import { StatCard } from "../components/stat_card.slint";
+import { DashboardAdapter } from "./data.slint";
+import { Card } from "../../components/card.slint";
+import { Icons } from "../../services/icons.slint";
+import { StatCard } from "../../components/stat_card.slint";
 import { HorizontalBox, ScrollView } from "std-widgets.slint";
 
 export component DashboardPage inherits Flickable {
+    horizontal-stretch: 1;
     min-width: layout.min-width + 40px;
 
     VerticalLayout {
         padding: 20px;
         spacing: 15px;
+        horizontal-stretch: 1;
 
         layout := HorizontalLayout {
             spacing: 15px;
-
-            StatCard { }
-
-            StatCard { }
-
-            StatCard { }
-
-            StatCard { }
+            for data in DashboardAdapter.stats: StatCard {
+                data: data;
+            }
         }
 
         HorizontalLayout {

@@ -1,54 +1,30 @@
 slint::include_modules!();
-use i_slint_backend_winit::WinitWindowAccessor;
+
+pub mod modules;
+pub mod utils;
+
+use modules::window_management::WindowManagement;
+
+use crate::modules::dashboard::dashboard::DashboardModule;
 
 fn main() -> Result<(), slint::PlatformError> {
-    let main_window: AppWindow = AppWindow::new()?;
-    let ui_handle: slint::Weak<AppWindow> = main_window.as_weak();
+    let window: AppWindow = AppWindow::new()?;
+    let ui_handle: slint::Weak<AppWindow> = window.as_weak();
 
-    // --- Drag Window ---
-    main_window.on_start_system_move({
-        let ui_handle: slint::Weak<AppWindow> = ui_handle.clone();
-        move || {
-            if let Some(ui) = ui_handle.upgrade() {
-                ui.window().with_winit_window(|winit_window| {
-                    let _ = winit_window.drag_window();
-                });
-            }
-        }
-    });
-    
-    // --- Close (Using Global) ---
-    // If Rust still says "not found", use: main_window.global::<WindowControl>()
-    // and make sure 'export global WindowControl' is in your .slint
-    main_window.global::<WindowControl>().on_close_requested({
-        let ui_handle: slint::Weak<AppWindow> = ui_handle.clone();
-        move || {
-            if let Some(win) = ui_handle.upgrade() {
-                let _ = win.hide();
-            }
-        }
-    });
+    //==========================
+    //
+    //==========================
+    WindowManagement {
+        ui_handle: ui_handle.clone(),
+        window: window.clone_strong(),
+    }
+    .setup_callbacks();
 
-    // --- Minimize ---
-    main_window.global::<WindowControl>().on_minimize_requested({
-        let ui_handle: slint::Weak<AppWindow> = ui_handle.clone();
-        move || {
-            if let Some(win) = ui_handle.upgrade() {
-                win.window().set_minimized(true);
-            }
-        }
-    });
+    //==========================
+    //
+    //==========================
+    let dashboard_module: DashboardModule = DashboardModule::new(window.clone_strong());
+    dashboard_module.update_stats();
 
-    // --- Maximize ---
-    main_window.global::<WindowControl>().on_maximize_requested({
-        let ui_handle: slint::Weak<AppWindow> = ui_handle.clone();
-        move || {
-            if let Some(win) = ui_handle.upgrade() {
-                let is_max: bool = win.window().is_maximized();
-                win.window().set_maximized(!is_max);
-            }
-        }
-    });
-
-    main_window.run()
+    window.run()
 }
