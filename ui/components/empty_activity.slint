@@ -1,0 +1,34 @@
+import { Theme } from "../theme/theme.slint";
+import { Icons } from "../services/icons.slint";
+import { HorizontalBox } from "std-widgets.slint";
+
+export component MyEmptyActivityComponent inherits Rectangle {
+    VerticalLayout {
+        spacing: 4px;
+        alignment: center;
+
+        HorizontalLayout {
+            alignment: center;
+
+            Image {
+                width: 50px;
+                height: self.width;
+                source: Icons.newScan;
+                colorize: Theme.text_tertiary;
+            }
+        }
+
+        Text {
+            font-weight: 600;
+            text: "No recent activity";
+            color: Theme.text_secondary;
+            horizontal-alignment: center;
+        }
+
+        Text {
+            color: Theme.text_tertiary;
+            horizontal-alignment: center;
+            text: "Start a scan to see activity here";
+        }
+    }
+}

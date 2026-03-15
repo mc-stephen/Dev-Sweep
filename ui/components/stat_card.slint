@@ -24,7 +24,7 @@ export component StatCard inherits Rectangle {
             background: Theme.accent.with-alpha(0.12);
 
             Image {
-                source: Icons.search;
+                source: data.icon;
                 colorize: Theme.accent;
                 width: parent.width - 25px;
             }
@@ -55,26 +55,27 @@ export component StatCard inherits Rectangle {
             alignment: center;
 
             Rectangle {
-                background: Theme.success_bg;
                 border-radius: self.height * Theme.radius_full;
+                background: data.is_grey ? Theme.bg_tertiary : Theme.success_bg;
 
                 HorizontalLayout {
+                    spacing: 2px;
                     padding-top: 4px;
-                    padding-left: 7px;
-                    padding-right: 7px;
-                    padding-bottom: 4px;
+                    padding-left: 6px;
+                    padding-right: 6px;
+                    padding-bottom: 3px;
 
                     Image {
-                        width: 10px;
-                        source: Icons.bolt;
-                        colorize: Theme.success;
+                        width: 8px;
+                        source: data.trend-icon;
+                        colorize:  data.is_grey ? Theme.text_tertiary : Theme.success;
                     }
 
                     Text {
-                        text: "Last Scan";
                         font-size: 0.72rem;
-                        color: Theme.success;
+                        text: data.trend-label;
                         vertical-alignment: center;
+                        color: data.is_grey ? Theme.text_tertiary : Theme.success;
                     }
                 }
             }

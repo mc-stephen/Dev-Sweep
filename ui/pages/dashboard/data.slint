@@ -3,40 +3,92 @@ import { Icons } from "../../services/icons.slint";
 export struct StatData {
     icon: image,
     value: string,
+    is_grey: bool,
     label: string,
     trend_icon: image,
     trend_label: string,
 }
 
+export struct QuickAction {
+    icon: image,
+    title: string,
+    sub_title: string,
+}
+
+export struct RecentActivity {
+    tag: string,
+    icon: image,
+    time: string,
+    title: string,
+    sub_title: string,
+}
+
 export global DashboardAdapter {
+    in-out property <[RecentActivity]> recent_activity: [
+        {
+            tag: "clean",
+            time: "2d ago",
+            icon: Icons.activeCleaner,
+            time: "Cleaning Complete",
+            sub_title: "8 projects cleaned · 4.2 GB recovered",
+        },
+    ];
+
+    in-out property <[QuickAction]> quick_action: [
+        {
+            icon: Icons.newScan,
+            title: "Start New Scan",
+            sub_title: "Scan your filesystem for dev projects",
+        },
+        {
+            icon: Icons.newScan,
+            title: "Quick Clean",
+            sub_title: "Clean all detected projects at once",
+        },
+        {
+            icon: Icons.newScan,
+            title: "Add New Cleaner",
+            sub_title: "Import a custom cleaner config",
+        },
+        {
+            icon: Icons.newScan,
+            title: "Documentation",
+            sub_title: "Learn how to create custom cleaners",
+        },
+    ];
+
     in-out property <[StatData]> stats: [
         {
+            value: "_",
+            is_grey: false,
+            icon: Icons.search,
             label: "Projects Found",
-            value: "_",
-            icon: Icons.search,
-            trend_icon: Icons.bolt,
-            trend_label: "Last Scan"
+            trend_label: "Last Scan",
+            trend_icon: Icons.projectsFound,
         },
         {
+            value: "_",
+            is_grey: false,
+            icon: Icons.search,
+            trend_label: "Estimated",
             label: "Space Recoverable",
-            value: "_",
-            icon: Icons.search,
-            trend_icon: Icons.bolt,
-            trend_label: "Last Scan"
+            trend_icon: Icons.spaceRecoverable,
         },
         {
+            value: "_",
+            is_grey: true,
+            icon: Icons.search,
             label: "Total Cleaned",
-            value: "_",
-            icon: Icons.search,
-            trend_icon: Icons.bolt,
-            trend_label: "Last Scan"
+            trend_label: "All time",
+            trend_icon: Icons.totalCleaned,
         },
         {
-            label: "Active Cleaners",
             value: "_",
+            is_grey: true,
             icon: Icons.search,
-            trend_icon: Icons.bolt,
-            trend_label: "Last Scan"
+            trend_label: "Plugins",
+            label: "Active Cleaners",
+            trend_icon: Icons.activeCleaner,
         }
     ];
 }

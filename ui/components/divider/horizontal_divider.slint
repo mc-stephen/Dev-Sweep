@@ -1,8 +1,9 @@
+import { Theme } from "../../theme/theme.slint";
 export component HorizontalDivider inherits Rectangle {
     in property <length> thickness: 1px;
 
-    background: #ccc;
     height: root.thickness;
     border-width: root.thickness;
     border-color: self.background;
+    background: Theme.border_primary;
 }

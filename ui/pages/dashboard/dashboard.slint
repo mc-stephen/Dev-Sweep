@@ -1,18 +1,226 @@
 import { DashboardAdapter } from "./data.slint";
+import { Theme } from "../../theme/theme.slint";
 import { Card } from "../../components/card.slint";
 import { Icons } from "../../services/icons.slint";
+import { QuickAction, RecentActivity } from "./data.slint";
 import { StatCard } from "../../components/stat_card.slint";
-import { HorizontalBox, ScrollView } from "std-widgets.slint";
+import { HorizontalBox, ScrollView, ListView } from "std-widgets.slint";
+import {
+    HorizontalDivider,
+} from "../../components/divider/horizontal_divider.slint";
+import {
+    MyEmptyActivityComponent,
+} from "../../components/empty_activity.slint";
+
+
+//===============================
+//
+//===============================
+component QuickActionComp inherits Rectangle {
+    in property <int> i;
+    in property <QuickAction> data;
+
+    height: 56px;
+
+    Rectangle {
+        border-width: 1px;
+        x: ta.has-hover ? 4px : 0px;
+        border-radius: Theme.radius_md;
+        drop-shadow-color: Theme.shadow_glow.darker(0.9);
+        drop-shadow-blur: i == 0 ? ta.has-hover ? 20px : 0px : 0px;
+        border-color: i == 0 ? Theme.accent.with-alpha(ta.has-hover ? 0.4 : 0.2) : ta.has-hover ? Theme.border_secondary : Theme.border_primary;
+        background: i == 0 ? @linear-gradient(135deg, Theme.accent.with-alpha(0.15), Theme.accent.with-alpha(0.05)) : ta.has-hover ? Theme.bg_elevated : Theme.bg_tertiary;
+
+        animate x {
+            duration: Theme.transition_fast;
+            easing: ease;
+        }
+
+        animate drop-shadow-blur {
+            duration: Theme.transition_fast;
+            easing: ease;
+        }
+
+        ta := TouchArea {
+            mouse-cursor: pointer;
+            clicked => {
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+            alignment: start;
+            padding-left: 10px;
+            padding-right: 10px;
+
+            VerticalLayout {
+                width: 36px;
+                alignment: center;
+
+                Rectangle {
+                    clip: true;
+                    width: 36px;
+                    height: self.width;
+                    background: Theme.bg_card;
+                    border-radius: Theme.radius_md;
+                    Image {
+                        source: data.icon;
+                        colorize: Theme.accent;
+                        width: parent.width - 18px;
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 3px;
+                alignment: center;
+                horizontal-stretch: 1;
+
+                Text {
+                    text: data.title;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                }
+
+                Text {
+                    font-size: 0.77rem;
+                    text: data.sub_title;
+                    color: Theme.text_tertiary;
+                }
+            }
+
+            VerticalLayout {
+                width: 12px;
+                alignment: center;
+
+                Image {
+                    width: 12px;
+                    height: self.width;
+                    source: Icons.arrowRight;
+                    colorize: Theme.text_tertiary;
+                }
+            }
+        }
+    }
+}
+
+//===============================
+//
+//===============================
+component RecentActivityComp inherits VerticalLayout {
+    in property <int> i;
+    in property <int> length;
+    in property <RecentActivity> data;
+
+    padding-left: 15px;
+    padding-right: 15px;
+    // horizontal-stretch: 1;
+
+    Rectangle {
+        height: 50px;
+        // background: ((i+1) % 2 == 0) ? red : green;
+
+        HorizontalLayout {
+            spacing: 10px;
+            horizontal-stretch: 1;
+            // padding-left: 10px;
+            // padding-right: 10px;
+
+            VerticalLayout {
+                width: 28px;
+                alignment: center;
+
+                Rectangle {
+                    clip: true;
+                    width: 28px;
+                    height: self.width;
+                    border-radius: Theme.radius_sm;
+                    background: Theme.accent.with-alpha(0.1);
+                    Image {
+                        colorize: Theme.accent;
+                        width: parent.width - 14px;
+                        source: Icons.activeCleaner;
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 2px;
+                alignment: center;
+                horizontal-stretch: 1;
+
+                Text {
+                    font-weight: 600;
+                    font-size: 0.85rem;
+                    text: "Cleaning Complete";
+                }
+
+                Text {
+                    font-size: 0.77rem;
+                    color: Theme.text_tertiary;
+                    text: "8 projects cleaned · 4.2 GB recovered";
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: center;
+                horizontal-stretch: 0;
+
+                Text {
+                    text: "2d ago";
+                    font-size: 0.72rem;
+                    color: Theme.text_tertiary;
+                    horizontal-alignment: right;
+                }
+
+                Rectangle {
+                    background: Theme.accent.with-alpha(0.1);
+                    border-radius: 100px * Theme.radius_full;
+
+                    VerticalLayout {
+                        padding-top: 4px;
+                        alignment: center;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        padding-bottom: 2px;
+
+                        Text {
+                            text: "CLEAN";
+                            font-weight: 600;
+                            font-size: 0.62rem;
+                            color: Theme.accent;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if i != (length - 1): HorizontalDivider {
+        background: Theme.border_primary.with-alpha(0.03);
+    }
+}
 
 export component DashboardPage inherits Flickable {
     horizontal-stretch: 1;
     min-width: layout.min-width + 40px;
+
+    TouchArea {
+        clicked => {
+        }
+        pointer-event(event) => {
+        }
+    }
 
     VerticalLayout {
         padding: 20px;
         spacing: 15px;
         horizontal-stretch: 1;
 
+        //===============================
+        // Stat Cards Section
+        //===============================
         layout := HorizontalLayout {
             spacing: 15px;
             for data in DashboardAdapter.stats: StatCard {
@@ -20,32 +228,55 @@ export component DashboardPage inherits Flickable {
             }
         }
 
+        //===============================
+        // Quick Action & Recent Section 
+        //===============================
         HorizontalLayout {
             spacing: 15px;
 
             Card {
-                source: Icons.bolt;
                 title: "Quick Actions";
+                source: Icons.quickAction;
 
                 VerticalLayout {
-                    spacing: 0px;
+                    spacing: 6px;
                     padding: 15px;
+                    horizontal-stretch: 1;
+
+                    for data[i] in DashboardAdapter.quick_action: QuickActionComp {
+                        i: i;
+                        data: data;
+                    }
                 }
             }
 
             Card {
-                source: Icons.moon;
+                hasMore: true;
+                source: Icons.recent;
                 title: "Recent Activity";
 
-                Rectangle {
-                    min-height: 200px;
+                if DashboardAdapter.recent_activity.length == 0: MyEmptyActivityComponent { }
+
+                if  DashboardAdapter.recent_activity.length != 0: ListView {
+                    vertical-stretch: 1;
+                    horizontal-stretch: 1;
+
+                    for data[i] in DashboardAdapter.recent_activity: RecentActivityComp {
+                        i: i;
+                        data: data;
+                        length: DashboardAdapter.recent_activity.length;
+                    }
                 }
             }
         }
 
+        //===============================
+        // Active Plugins Section
+        //===============================
         Card {
-            source: Icons.notification;
+            hasMore: true;
             title: "Available Cleaners";
+            source: Icons.AvailableCleaners;
 
             Rectangle {
                 min-height: 200px;

@@ -1,8 +1,11 @@
 export global Icons {
-    out property <image> sun: @image-url("../../assets/icons/sun.png");
-    out property <image> moon: @image-url("../../assets/icons/moon.png");
     out property <image> appIcon: @image-url("../../assets/icons/app_icon.png");
-
+    out property <image> arrowRight: @image-url("../../assets/icons/arrow-right.png");
+    
+    // Theme
+    out property <image> sun: @image-url("../../assets/icons/theme/sun.png");
+    out property <image> moon: @image-url("../../assets/icons/theme/moon.png");
+    
     // Tabs
     out property <image> puzzle: @image-url("../../assets/icons/tabs/puzzle.png");
     out property <image> search: @image-url("../../assets/icons/tabs/search.png");
@@ -13,4 +16,21 @@ export global Icons {
     // Body Header
     out property <image> bolt: @image-url("../../assets/icons/body_header/bolt.png");
     out property <image> notification: @image-url("../../assets/icons/body_header/notification.png");
+
+    // Card Icons
+    out property <image> AvailableCleaners: puzzle;
+    out property <image> recent: @image-url("../../assets/icons/card/history.png");
+    out property <image> quickAction: @image-url("../../assets/icons/card/rocket.png");
+
+    // Quick Action Icons
+    out property <image> quickClean: appIcon;
+    out property <image> newScan: @image-url("../../assets/icons/quick_action/scan.png");
+    out property <image> addCleaner: @image-url("../../assets/icons/quick_action/add.png");
+    out property <image> documentation: @image-url("../../assets/icons/quick_action/book.png");
+
+    // Card Stats
+    out property <image> activeCleaner: puzzle;
+    out property <image> totalCleaned: @image-url("../../assets/icons/stats_card/minus.png");
+    out property <image> projectsFound: @image-url("../../assets/icons/stats_card/arrow-up.png");
+    out property <image> spaceRecoverable: @image-url("../../assets/icons/stats_card/arrow-up.png");
 }

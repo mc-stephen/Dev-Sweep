@@ -1,17 +1,22 @@
 
 import { Theme } from "../theme/theme.slint";
+import { Icons } from "../services/icons.slint";
 import { HorizontalDivider } from "divider/horizontal_divider.slint";
 
 component CardHeader inherits HorizontalLayout {
     in property <string> title;
     in property <image> source;
+    in property <bool> hasMore;
 
-    spacing: 3px;
+    callback moreClicked();
+
+    spacing: 4px;
     padding: 15px;
     vertical-stretch: 0;
+    horizontal-stretch: 1;
 
     Image {
-        width: 18px;
+        width: 17px;
         source: source;
         height: self.width;
         colorize: Theme.accent;
@@ -26,13 +31,15 @@ component CardHeader inherits HorizontalLayout {
         vertical-alignment: center;
     }
 
-    Rectangle {
+    if hasMore:   Rectangle {
         ta := TouchArea {
             mouse-cursor: pointer;
+            clicked => moreClicked();
         }
 
         HorizontalLayout {
-            spacing: 6px;
+            spacing: 3px;
+            horizontal-stretch: 1;
 
             Text {
                 text: "View All";
@@ -44,9 +51,10 @@ component CardHeader inherits HorizontalLayout {
             VerticalLayout {
                 y: -1.5px;
                 alignment: center;
+
                 Image {
                     width: 10px;
-                    source: source;
+                    source: Icons.arrowRight;
                     colorize: ta.has-hover ? Theme.accent : Theme.accent_light;
                 }
             }
@@ -57,6 +65,9 @@ component CardHeader inherits HorizontalLayout {
 export component Card inherits Rectangle {
     in property <string> title;
     in property <image> source;
+    in-out property <bool> hasMore: false;
+
+    callback moreClicked();
 
     clip: true;
     border-width: 1px;
@@ -70,6 +81,8 @@ export component Card inherits Rectangle {
         CardHeader {
             title: title;
             source: source;
+            hasMore: hasMore;
+            moreClicked => moreClicked();
         }
 
         HorizontalDivider {
